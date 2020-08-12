@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MQTTnet.AspNetCore;
 using MQTTnet.AspNetCore.AttributeRouting;
 using MQTTnet.AspNetCore.Extensions;
@@ -30,12 +24,17 @@ namespace Example
             // Configure AspNetCore controllers
             services.AddControllers();
 
-            // Configure MQTT controllers
+            // Identify and build routes for the current assembly
+            services.AddMqttControllers();
+
             services
-                .AddHostedMqttServerWithAttributeRouting(s =>
+                .AddHostedMqttServerWithServices(s =>
                 {
                     // Optionally set server options here
                     s.WithoutDefaultEndpoint();
+
+                    // Enable Attribute routing
+                    s.WithAttributeRouting();
                 })
                 .AddMqttConnectionHandler()
                 .AddConnections();

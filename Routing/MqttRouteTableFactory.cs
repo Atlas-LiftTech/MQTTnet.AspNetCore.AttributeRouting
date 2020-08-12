@@ -35,7 +35,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
             var asm = assemblies ?? new Assembly[] { Assembly.GetExecutingAssembly() };
 
             var actions = asm.SelectMany(a => a.GetTypes())
-                .Where(type => type.IsSubclassOf(typeof(MqttBaseController)))
+                .Where(type => type.GetCustomAttribute(typeof(MqttControllerAttribute), true) != null)
                 .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 .Where(m => !m.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), true).Any() && !m.IsDefined(typeof(NonActionAttribute)));
 

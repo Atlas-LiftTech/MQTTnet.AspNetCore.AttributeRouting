@@ -24,8 +24,8 @@ namespace Example.MqttControllers
             // We have access to the MqttContext
             if (zipCode != 90210) { MqttContext.CloseConnection = true; }
 
-            // We have access to the request context
-            var temperature = BitConverter.ToDouble(Request.Payload);
+            // We have access to the raw message
+            var temperature = BitConverter.ToDouble(Message.Payload);
 
             _logger.LogInformation($"It's {temperature} degrees in Hollywood");
 
