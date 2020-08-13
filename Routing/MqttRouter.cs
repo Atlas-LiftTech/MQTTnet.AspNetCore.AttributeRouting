@@ -8,22 +8,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+
+#nullable enable
 
 namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 {
     internal class MqttRouter
     {
         private readonly ILogger<MqttRouter> logger;
+        private readonly MqttRouteTable routeTable;
+        private readonly ITypeActivatorCache typeActivator;
 
-        public MqttRouter(ILogger<MqttRouter> logger)
+        public MqttRouter(ILogger<MqttRouter> logger, MqttRouteTable routeTable, ITypeActivatorCache typeActivator)
         {
             this.logger = logger;
+            this.routeTable = routeTable;
+            this.typeActivator = typeActivator;
         }
 
-        internal void OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context)
+        internal async Task OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context)
         {
-            var routeTable = options.ServiceProvider.GetRequiredService<MqttRouteTable>();
-            var typeActivator = options.ServiceProvider.GetRequiredService<ITypeActivatorCache>();
             var routeContext = new MqttRouteContext(context.ApplicationMessage.Topic);
 
             routeTable.Route(routeContext);
@@ -37,14 +42,19 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
             }
             else
             {
-                object result = null;
-
                 using (var scope = options.ServiceProvider.CreateScope())
                 {
-                    var classInstance = typeActivator.CreateInstance<object>(scope.ServiceProvider, routeContext.Handler.DeclaringType);
+                    Type? declaringType = routeContext.Handler.DeclaringType;
+
+                    if (declaringType == null)
+                    {
+                        throw new InvalidOperationException($"{routeContext.Handler} must have a declaring type.");
+                    }
+
+                    var classInstance = typeActivator.CreateInstance<object>(scope.ServiceProvider, declaringType);
 
                     // Potential perf improvement is to cache this reflection work in the future.
-                    var activateProperties = routeContext.Handler.DeclaringType.GetRuntimeProperties()
+                    var activateProperties = declaringType.GetRuntimeProperties()
                         .Where((property) =>
                         {
                             return
@@ -57,31 +67,32 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 
                     if (activateProperties.Length == 0)
                     {
-                        logger.LogDebug($"MqttController '{routeContext.Handler.DeclaringType.FullName}' does not have a property that can accept a controller context.  You may want to add a [{nameof(MqttControllerContextAttribute)}] to a pubilc property.");
+                        logger.LogDebug($"MqttController '{declaringType.FullName}' does not have a property that can accept a controller context.  You may want to add a [{nameof(MqttControllerContextAttribute)}] to a pubilc property.");
                     }
 
-                    foreach (var property in activateProperties)
+                    for (int i = 0; i < activateProperties.Length; i++)
                     {
+                        PropertyInfo property = activateProperties[i];
                         property.SetValue(classInstance, context);
                     }
 
                     ParameterInfo[] parameters = routeContext.Handler.GetParameters();
 
+                    context.AcceptPublish = true;
+
                     if (parameters.Length == 0)
                     {
-                        result = routeContext.Handler.Invoke(classInstance, null);
-                        context.AcceptPublish = true;
+                        await HandlerInvoker(routeContext.Handler, classInstance, null).ConfigureAwait(false);
                     }
                     else
                     {
-                        object[] paramArray;
+                        object?[] paramArray;
 
                         try
                         {
                             paramArray = parameters.Select(p => MatchParameterOrThrow(p, routeContext.Parameters)).ToArray();
 
-                            result = routeContext.Handler.Invoke(classInstance, paramArray);
-                            context.AcceptPublish = true;
+                            await HandlerInvoker(routeContext.Handler, classInstance, paramArray).ConfigureAwait(false);
                         }
                         catch (ArgumentException ex)
                         {
@@ -101,9 +112,32 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
             }
         }
 
-        private static object MatchParameterOrThrow(ParameterInfo param, IReadOnlyDictionary<string, object> availableParmeters)
+        private static Task HandlerInvoker(MethodInfo method, object instance, object?[]? parameters)
         {
-            if (!availableParmeters.TryGetValue(param.Name, out object value))
+            if (method.ReturnType == typeof(void))
+            {
+                method.Invoke(instance, parameters);
+
+                return Task.CompletedTask;
+            }
+            else if (method.ReturnType == typeof(Task))
+            {
+                var result = (Task?)method.Invoke(instance, parameters);
+
+                if (result == null)
+                {
+                    throw new NullReferenceException($"{method.DeclaringType.FullName}.{method.Name} returned null instead of Task");
+                }
+
+                return result;
+            }
+
+            throw new InvalidOperationException($"Unsupported Action return type \"{method.ReturnType}\" on method {method.DeclaringType.FullName}.{method.Name}");
+        }
+
+        private static object? MatchParameterOrThrow(ParameterInfo param, IReadOnlyDictionary<string, object> availableParmeters)
+        {
+            if (!availableParmeters.TryGetValue(param.Name, out object? value))
             {
                 if (param.IsOptional)
                 {

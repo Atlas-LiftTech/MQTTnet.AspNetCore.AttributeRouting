@@ -19,7 +19,7 @@ namespace Example.MqttControllers
 
         // Supports template routing with typed constraints
         [MqttRoute("{zipCode:int}/temperature")]
-        public async Task WeatherReport(int zipCode)
+        public Task WeatherReport(int zipCode)
         {
             // We have access to the MqttContext
             if (zipCode != 90210) { MqttContext.CloseConnection = true; }
@@ -29,11 +29,13 @@ namespace Example.MqttControllers
 
             _logger.LogInformation($"It's {temperature} degrees in Hollywood");
 
-            if (temperature <= 0 && temperature >= 130)
+            // Example validation
+            if (temperature <= 0 || temperature >= 130)
             {
-                // Example validation
-                MqttContext.AcceptPublish = false;
+                return BadMessage();
             }
+
+            return Ok();
         }
     }
 }

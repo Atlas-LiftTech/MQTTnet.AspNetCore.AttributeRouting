@@ -71,7 +71,7 @@ Create your controllers by inheriting from MqttBaseController and adding actions
 ```csharp
 [MqttController]
 [MqttRoute("[controller]")] // Optional route prefix
-public class MqttWeatherForecastController : MqttBaseController
+public class MqttWeatherForecastController : MqttBaseController // Inherit from MqttBaseController for convenience functions
 {
 	private readonly ILogger<MqttWeatherForecastController> _logger;
 
@@ -84,7 +84,7 @@ public class MqttWeatherForecastController : MqttBaseController
 	// Supports template routing with typed constraints just like AspNetCore
 	// Action routes compose together with the route prefix on the controller level
 	[MqttRoute("{zipCode:int}/temperature")]
-	public async Task WeatherReport(int zipCode)
+	public Task WeatherReport(int zipCode)
 	{
 		// We have access to the MqttContext
 		if (zipCode != 90210) { MqttContext.CloseConnection = true; }
@@ -94,11 +94,13 @@ public class MqttWeatherForecastController : MqttBaseController
 
 		_logger.LogInformation($"It's {temperature} degrees in Hollywood");
 
-		if (temperature <= 0 && temperature >= 130)
+		// Example validation
+		if (temperature <= 0 || temperature >= 130)
 		{
-			// Example validation
-			MqttContext.AcceptPublish = false;
+			return BadMessage();
 		}
+
+		return Ok();
 	}
 }
 ```

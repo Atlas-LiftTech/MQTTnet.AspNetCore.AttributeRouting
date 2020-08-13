@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Atlas Lift Tech Inc. All rights reserved.
 
+using Microsoft.AspNetCore.Mvc;
 using MQTTnet.AspNetCore.AttributeRouting.Attributes;
 using MQTTnet.Server;
+using System.Threading.Tasks;
 
 namespace MQTTnet.AspNetCore.AttributeRouting
 {
@@ -18,5 +20,35 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         /// Gets the <see cref="MqttApplicationMessage"/> for the executing action.
         /// </summary>
         public MqttApplicationMessage Message => MqttContext.ApplicationMessage;
+
+        /// <summary>
+        /// Create a result that accepts the given message and publishes it to all subscribers on the topic.
+        /// </summary>
+        /// <returns>The created <see cref="Task"/> for the reponse.</returns>
+        [NonAction]
+        public virtual Task Ok()
+        {
+            MqttContext.AcceptPublish = true;
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Create a result that accepts the given message and publishes it to all subscribers on the topic. This is an
+        /// alias for the <see cref="Ok"/> result.
+        /// </summary>
+        /// <returns>The created <see cref="Task"/> for the reponse.</returns>
+        [NonAction]
+        public virtual Task Accepted() => Ok();
+
+        /// <summary>
+        /// Create a result that rejects the given message and prevents publishing it to any subscribers.
+        /// </summary>
+        /// <returns>The created <see cref="Task"/> for the reponse.</returns>
+        [NonAction]
+        public virtual Task BadMessage()
+        {
+            MqttContext.AcceptPublish = false;
+            return Task.CompletedTask;
+        }
     }
 }
