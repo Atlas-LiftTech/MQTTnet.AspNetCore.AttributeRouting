@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using MQTTnet.AspNetCore.AttributeRouting.Attributes;
+using MQTTnet.AspNetCore.AttributeRouting.Routing;
 using MQTTnet.Server;
 using System.Threading.Tasks;
 
@@ -13,13 +14,23 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         /// <summary>
         /// Connection context is set by controller activator. If this class is instantiated directly, it will be null.
         /// </summary>
-        [MqttControllerContext]
-        public MqttApplicationMessageInterceptorContext MqttContext { get; set; }
+        public MqttApplicationMessageInterceptorContext MqttContext => ControllerContext.MqttContext;
 
         /// <summary>
         /// Gets the <see cref="MqttApplicationMessage"/> for the executing action.
         /// </summary>
         public MqttApplicationMessage Message => MqttContext.ApplicationMessage;
+
+        /// <summary>
+        /// Gets the <see cref="MqttServer"/> for the executing action.
+        /// </summary>
+        public IMqttServer Server => ControllerContext.MqttServer;
+
+        /// <summary>
+        /// ControllerContext is set by controller activator. If this class is instantiated directly, it will be null.
+        /// </summary>
+        [MqttControllerContext]
+        public MqttControllerContext ControllerContext { get; set; }
 
         /// <summary>
         /// Create a result that accepts the given message and publishes it to all subscribers on the topic.

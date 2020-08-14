@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MQTTnet.AspNetCore.AttributeRouting
 {
-    internal class TemplateSegment
+    internal class TemplateSegment : IEquatable<TemplateSegment>
     {
         public TemplateSegment(string template, string segment, bool isParameter)
         {
@@ -93,6 +93,61 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         public bool IsCatchAll { get; }
 
         public RouteConstraint[] Constraints { get; }
+
+        public bool Equals(TemplateSegment other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (IsCatchAll != other.IsCatchAll ||
+                IsOptional != other.IsOptional ||
+                IsParameter != other.IsParameter ||
+                !string.Equals(Value, other.Value, StringComparison.Ordinal) ||
+                (Constraints == null && other.Constraints != null) ||
+                (Constraints != null && other.Constraints == null))
+            {
+                return false;
+            }
+
+            if (Constraints == null && other.Constraints == null)
+            {
+                return true;
+            }
+
+            if (Constraints.Length != other.Constraints.Length)
+            {
+                return false;
+            }
+
+            foreach (var constraint in Constraints)
+            {
+                if (!other.Constraints.Any<RouteConstraint>(c => string.Equals(c.Name, constraint.Name)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override bool Equals(object other)
+        {
+            if (!this.GetType().Equals(other.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                return Equals((TemplateSegment)other);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
 
         public bool Match(string pathSegment, out object matchedParameterValue)
         {

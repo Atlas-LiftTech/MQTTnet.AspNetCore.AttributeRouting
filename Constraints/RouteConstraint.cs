@@ -11,8 +11,10 @@ namespace MQTTnet.AspNetCore.AttributeRouting
 {
     internal abstract class RouteConstraint
     {
+        public abstract string Name { get; }
+
         // note: the things that prevent this cache from growing unbounded is that we're the only caller to this code
-        // path, and the fact that there are only 8 possible instances that we create. // The values passed in here for
+        // path, and the fact that there are only 8 possible instances that we create. The values passed in here for
         // parsing are always static text defined in route attributes.
         private static readonly ConcurrentDictionary<string, RouteConstraint> _cachedConstraints
             = new ConcurrentDictionary<string, RouteConstraint>();
@@ -32,7 +34,8 @@ namespace MQTTnet.AspNetCore.AttributeRouting
             }
             else
             {
-                var newInstance = CreateRouteConstraint(constraint);
+                var newInstance = CreateRouteConstraint(constraint, segment);
+
                 if (newInstance != null)
                 {
                     // We've done to the work to create the constraint now, but it's possible we're competing with
@@ -49,75 +52,75 @@ namespace MQTTnet.AspNetCore.AttributeRouting
 
         /// <summary>
         /// Creates a structured RouteConstraint object given a string that contains the route constraint. A constraint
-        /// is the place after the colon in a parameter definition, for example `{age:int?}`. /// If the constraint
-        /// denotes an optional, this method will return an <see cref="OptionalTypeRouteConstraint{T}"/> which handles
-        /// the appropriate checks.
+        /// is the place after the colon in a parameter definition, for example `{age:int?}`. If the constraint denotes
+        /// an optional, this method will return an <see cref="OptionalTypeRouteConstraint{T}"/> which handles the
+        /// appropriate checks.
         /// </summary>
         /// <param name="constraint">String representation of the constraint</param>
         /// <returns>Type-specific RouteConstraint object</returns>
-        private static RouteConstraint CreateRouteConstraint(string constraint)
+        private static RouteConstraint CreateRouteConstraint(string constraint, string name)
         {
             switch (constraint)
             {
                 case "bool":
-                    return new TypeRouteConstraint<bool>(bool.TryParse);
+                    return new TypeRouteConstraint<bool>(bool.TryParse, name);
 
                 case "bool?":
-                    return new OptionalTypeRouteConstraint<bool>(bool.TryParse);
+                    return new OptionalTypeRouteConstraint<bool>(bool.TryParse, name);
 
                 case "datetime":
                     return new TypeRouteConstraint<DateTime>((string str, out DateTime result)
-                        => DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.None, out result));
+                        => DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.None, out result), name);
 
                 case "datetime?":
                     return new OptionalTypeRouteConstraint<DateTime>((string str, out DateTime result)
-                        => DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.None, out result));
+                        => DateTime.TryParse(str, CultureInfo.InvariantCulture, DateTimeStyles.None, out result), name);
 
                 case "decimal":
                     return new TypeRouteConstraint<decimal>((string str, out decimal result)
-                        => decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "decimal?":
                     return new OptionalTypeRouteConstraint<decimal>((string str, out decimal result)
-                        => decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "double":
                     return new TypeRouteConstraint<double>((string str, out double result)
-                        => double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "double?":
                     return new OptionalTypeRouteConstraint<double>((string str, out double result)
-                        => double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => double.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "float":
                     return new TypeRouteConstraint<float>((string str, out float result)
-                        => float.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => float.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "float?":
                     return new OptionalTypeRouteConstraint<float>((string str, out float result)
-                        => float.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result));
+                        => float.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out result), name);
 
                 case "guid":
-                    return new TypeRouteConstraint<Guid>(Guid.TryParse);
+                    return new TypeRouteConstraint<Guid>(Guid.TryParse, name);
 
                 case "guid?":
-                    return new OptionalTypeRouteConstraint<Guid>(Guid.TryParse);
+                    return new OptionalTypeRouteConstraint<Guid>(Guid.TryParse, name);
 
                 case "int":
                     return new TypeRouteConstraint<int>((string str, out int result)
-                        => int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result));
+                        => int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result), name);
 
                 case "int?":
                     return new OptionalTypeRouteConstraint<int>((string str, out int result)
-                        => int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result));
+                        => int.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result), name);
 
                 case "long":
                     return new TypeRouteConstraint<long>((string str, out long result)
-                        => long.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result));
+                        => long.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result), name);
 
                 case "long?":
                     return new OptionalTypeRouteConstraint<long>((string str, out long result)
-                        => long.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result));
+                        => long.TryParse(str, NumberStyles.Integer, CultureInfo.InvariantCulture, out result), name);
 
                 default:
                     return null;

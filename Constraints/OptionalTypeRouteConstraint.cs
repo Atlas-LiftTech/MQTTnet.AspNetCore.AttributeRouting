@@ -13,9 +13,12 @@ namespace MQTTnet.AspNetCore.AttributeRouting
 
         private readonly TryParseDelegate _parser;
 
-        public OptionalTypeRouteConstraint(TryParseDelegate parser)
+        public override string Name { get; }
+
+        public OptionalTypeRouteConstraint(TryParseDelegate parser, string name)
         {
             _parser = parser;
+            Name = name;
         }
 
         public override bool Match(string pathSegment, out object convertedValue)

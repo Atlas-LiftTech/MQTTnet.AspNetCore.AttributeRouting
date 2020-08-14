@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MQTTnet.AspNetCore.AttributeRouting
 {
@@ -21,12 +19,12 @@ namespace MQTTnet.AspNetCore.AttributeRouting
 
             if (template == string.Empty)
             {
-                // Special case "/";
-                return new RouteTemplate("/", Array.Empty<TemplateSegment>());
+                throw new InvalidOperationException(
+                    $"Empty routes are not allowed. Use a catchall route instead.");
             }
 
             var segments = template.Split('/');
-            var templateSegments = new TemplateSegment[segments.Length];
+            var templateSegments = new List<TemplateSegment>(segments.Length);
 
             for (int i = 0; i < segments.Length; i++)
             {
@@ -46,7 +44,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
                             $"Invalid template '{template}'. Missing '{{' in parameter segment '{segment}'.");
                     }
 
-                    templateSegments[i] = new TemplateSegment(originalTemplate, segment, isParameter: false);
+                    templateSegments.Add(new TemplateSegment(originalTemplate, segment, isParameter: false));
                 }
                 else
                 {
@@ -70,15 +68,15 @@ namespace MQTTnet.AspNetCore.AttributeRouting
                             $"Invalid template '{template}'. The character '{segment[invalidCharacter]}' in parameter segment '{segment}' is not allowed.");
                     }
 
-                    templateSegments[i] = new TemplateSegment(originalTemplate, segment.Substring(1, segment.Length - 2), isParameter: true);
+                    templateSegments.Add(new TemplateSegment(originalTemplate, segment.Substring(1, segment.Length - 2), isParameter: true));
                 }
             }
 
-            for (int i = 0; i < templateSegments.Length; i++)
+            for (int i = 0; i < templateSegments.Count; i++)
             {
                 var currentSegment = templateSegments[i];
 
-                if (currentSegment.IsCatchAll && i != templateSegments.Length - 1)
+                if (currentSegment.IsCatchAll && i != templateSegments.Count - 1)
                 {
                     throw new InvalidOperationException($"Invalid template '{template}'. A catch-all parameter can only appear as the last segment of the route template.");
                 }
@@ -88,7 +86,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
                     continue;
                 }
 
-                for (int j = i + 1; j < templateSegments.Length; j++)
+                for (int j = i + 1; j < templateSegments.Count; j++)
                 {
                     var nextSegment = templateSegments[j];
 

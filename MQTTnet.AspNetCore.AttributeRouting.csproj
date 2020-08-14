@@ -3,9 +3,11 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>This is a support library to integrate AttributeRouting into MQTTnet with AspNetCore.
+		<Description>
+			This is a support library to integrate AttributeRouting into MQTTnet with AspNetCore.
 
-Easily create Controllers and Actions to process incoming MQTT messages using attribute-based routing against the incoming message topic.</Description>
+			Easily create Controllers and Actions to process incoming MQTT messages using attribute-based routing against the incoming message topic.
+		</Description>
 		<Copyright>Copyright (c) Atlas Lift Tech Inc. 2020</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MQTT Message Queue Telemetry Transport MQTTClient MQTTServer Server MQTTBroker Broker NETStandard IoT InternetOfThings Messaging Hardware Arduino Sensor Actuator M2M ESP Smart Home Cities Automation Xamarin Blazor AspNetCore</PackageTags>
@@ -19,12 +21,18 @@ Easily create Controllers and Actions to process incoming MQTT messages using at
 		<LangVersion>default</LangVersion>
 		<RepositoryUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</RepositoryUrl>
 		<RepositoryType>GIT</RepositoryType>
-		<PackageReleaseNotes>Beta release 2
+		<PackageReleaseNotes>
+			Beta release 2
 
-* Added ability to use async/await with Actions.
-* Added convenience return methods to MqttBaseController (such as Ok, BadMessage, Accepted)</PackageReleaseNotes>
+			* Added ability to use async/await with Actions.
+			* Added convenience return methods to MqttBaseController (such as Ok, BadMessage, Accepted)
+		</PackageReleaseNotes>
 		<Version>0.2.0</Version>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</PackageProjectUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
@@ -36,9 +44,12 @@ Easily create Controllers and Actions to process incoming MQTT messages using at
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Example\**" />
-	  <EmbeddedResource Remove="Example\**" />
-	  <None Remove="Example\**" />
+		<Compile Remove="Example\**" />
+		<Compile Remove="Tests\**" />
+		<EmbeddedResource Remove="Example\**" />
+		<EmbeddedResource Remove="Tests\**" />
+		<None Remove="Example\**" />
+		<None Remove="Tests\**" />
 	</ItemGroup>
 
 	<ItemGroup>

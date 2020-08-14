@@ -179,13 +179,13 @@ namespace MQTTnet.AspNetCore.AttributeRouting
             var xTemplate = x.Template;
             var yTemplate = y.Template;
 
-            if (xTemplate.Segments.Length != y.Template.Segments.Length)
+            if (xTemplate.Segments.Count() != y.Template.Segments.Count())
             {
-                return xTemplate.Segments.Length < y.Template.Segments.Length ? -1 : 1;
+                return xTemplate.Segments.Count() < y.Template.Segments.Count() ? -1 : 1;
             }
             else
             {
-                for (var i = 0; i < xTemplate.Segments.Length; i++)
+                for (var i = 0; i < xTemplate.Segments.Count(); i++)
                 {
                     var xSegment = xTemplate.Segments[i];
                     var ySegment = yTemplate.Segments[i];

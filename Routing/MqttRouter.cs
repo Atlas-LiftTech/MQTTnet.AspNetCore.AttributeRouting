@@ -70,10 +70,16 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
                         logger.LogDebug($"MqttController '{declaringType.FullName}' does not have a property that can accept a controller context.  You may want to add a [{nameof(MqttControllerContextAttribute)}] to a pubilc property.");
                     }
 
+                    var controllerContext = new MqttControllerContext()
+                    {
+                        MqttContext = context,
+                        MqttServer = scope.ServiceProvider.GetRequiredService<IMqttServer>()
+                    };
+
                     for (int i = 0; i < activateProperties.Length; i++)
                     {
                         PropertyInfo property = activateProperties[i];
-                        property.SetValue(classInstance, context);
+                        property.SetValue(classInstance, controllerContext);
                     }
 
                     ParameterInfo[] parameters = routeContext.Handler.GetParameters();
@@ -100,11 +106,17 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 
                             context.AcceptPublish = false;
                         }
-                        catch (Exception ex)
+                        catch (TargetInvocationException ex)
                         {
-                            logger.LogError(ex, $"Unhandled MQTT action exception. See inner exception for details.");
+                            logger.LogError(ex.InnerException, $"Unhandled MQTT action exception. See inner exception for details.");
 
                             // This is an unandled exception from the invoked action
+                            context.AcceptPublish = false;
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Unable to invoke Mqtt Action.  See inner exception for details.");
+
                             context.AcceptPublish = false;
                         }
                     }
@@ -132,7 +144,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
                 return result;
             }
 
-            throw new InvalidOperationException($"Unsupported Action return type \"{method.ReturnType}\" on method {method.DeclaringType.FullName}.{method.Name}");
+            throw new InvalidOperationException($"Unsupported Action return type \"{method.ReturnType}\" on method {method.DeclaringType.FullName}.{method.Name}. Only void and {nameof(Task)} are allowed.");
         }
 
         private static object? MatchParameterOrThrow(ParameterInfo param, IReadOnlyDictionary<string, object> availableParmeters)

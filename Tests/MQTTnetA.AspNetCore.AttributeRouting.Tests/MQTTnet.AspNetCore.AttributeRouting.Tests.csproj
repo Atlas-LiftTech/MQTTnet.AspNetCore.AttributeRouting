@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+
+		<IsPackable>false</IsPackable>
+
+		<SignAssembly>true</SignAssembly>
+
+		<AssemblyOriginatorKeyFile>codeSigningKey.pfx</AssemblyOriginatorKeyFile>
+
+		<AssemblyName>MQTTnet.AspNetCore.AttributeRouting.Tests</AssemblyName>
+
+		<RootNamespace>MQTTnet.AspNetCore.AttributeRouting.Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'netcoreapp3.1' ">
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\MQTTnet.AspNetCore.AttributeRouting.csproj" />
+	</ItemGroup>
+</Project>
