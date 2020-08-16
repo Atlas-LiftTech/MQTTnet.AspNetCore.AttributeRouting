@@ -1,11 +1,4 @@
-﻿<p align="center">
-<img src="https://github.com/chkr1011/MQTTnet/blob/master/Images/icon_det_256.png?raw=true" width="196">
-<br/>
-Attribute Routing
-<br/>
-</p>
-
-[![NuGet Badge](https://buildstats.info/nuget/MQTTnet.AspNetCore.AttributeRouting)](https://www.nuget.org/packages/MQTTnet.AspNetCore.AttributeRouting)
+﻿[![NuGet Badge](https://buildstats.info/nuget/MQTTnet.AspNetCore.AttributeRouting)](https://www.nuget.org/packages/MQTTnet.AspNetCore.AttributeRouting)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/LICENSE)
 
 # MQTTnet AspNetCore AttributeRouting
@@ -15,8 +8,9 @@ This addon to MQTTnet provides the ability to define controllers and use attribu
 ## Features
 
 * Encapsulate your incoming message logic in controllers
-* Use familiar paradigms from AspNetCore in your MQTT logic
+* Use familiar paradigms from AspNetCore in your MQTT logic (Controllers and Actions)
 * First-class support for dependency injection using existing ServiceProvider implementaiton in your AspNetCore project
+* Support for sync and async/await Actions on your controllers
 * Use together with any other MQTTnet options
 
 ## Performance Note

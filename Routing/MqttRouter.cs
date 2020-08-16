@@ -29,6 +29,13 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 
         internal async Task OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context)
         {
+            // Don't process messages sent from the server itself. This avoids footguns like a server failing to publish
+            // a message because a route isn't found on a controller.
+            if (context.ClientId == null)
+            {
+                return;
+            }
+
             var routeContext = new MqttRouteContext(context.ApplicationMessage.Topic);
 
             routeTable.Route(routeContext);
