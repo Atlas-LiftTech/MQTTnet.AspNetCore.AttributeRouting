@@ -17,7 +17,7 @@
 		<FileVersion>0.3.0.0</FileVersion>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
-		<AssemblyOriginatorKeyFile>codeSigningKey.pfx</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\codeSigningKey.pfx</AssemblyOriginatorKeyFile>
 		<LangVersion>default</LangVersion>
 		<RepositoryUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</RepositoryUrl>
 		<RepositoryType>GIT</RepositoryType>
@@ -39,15 +39,6 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
 		<PackageReference Include="Microsoft.AspNetCore.Http.Connections" Version="1.1.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Remove="Example\**" />
-		<Compile Remove="Tests\**" />
-		<EmbeddedResource Remove="Example\**" />
-		<EmbeddedResource Remove="Tests\**" />
-		<None Remove="Example\**" />
-		<None Remove="Tests\**" />
 	</ItemGroup>
 
 	<ItemGroup>

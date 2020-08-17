@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MQTTnet.AspNetCore.AttributeRouting.csproj" />
+    <ProjectReference Include="..\Source\MQTTnet.AspNetCore.AttributeRouting.csproj" />
   </ItemGroup>
 
 
