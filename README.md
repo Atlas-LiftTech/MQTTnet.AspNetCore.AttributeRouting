@@ -5,6 +5,16 @@
 
 This addon to MQTTnet provides the ability to define controllers and use attribute-based routing against message topics in a manner that is very similar to AspNet Core.
 
+## When should I use this library?
+
+This library is a completely optional addon to MQTTnet (i.e. it is never required). You would WANT to use this if:
+
+* Your primary use case is validating/processing the MQTT messages on your server
+* Your server is not primarily sending data to clients via MQTT
+* You appreciate encapsulating your message processing logic in controllers in a way similar to AspNetCore and WebAPI
+
+You can do everything that this addon does directly by using MQTTnet delegates yourself.  However, as the amount of logic you write to validate or process incoming messages grows, the ability to organize your logic into controllers start to make much more sense.  This library helps with organizing that code as well as bringing together your dependency injection framework to MQTTnet.
+
 ## Features
 
 * Encapsulate your incoming message logic in controllers
