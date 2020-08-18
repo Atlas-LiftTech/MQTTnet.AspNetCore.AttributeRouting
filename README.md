@@ -1,5 +1,5 @@
 ﻿[![NuGet Badge](https://buildstats.info/nuget/MQTTnet.AspNetCore.AttributeRouting)](https://www.nuget.org/packages/MQTTnet.AspNetCore.AttributeRouting)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/LICENSE)
 
 # MQTTnet AspNetCore AttributeRouting
 
@@ -111,7 +111,6 @@ public class MqttWeatherForecastController : MqttBaseController // Inherit from 
 
 [See a full example project here](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/tree/master/Example)
 
-
 ## Contributions
 
 Contributions are welcome.  Please open an issue to discuss your idea prior to sending a PR.
@@ -119,3 +118,7 @@ Contributions are welcome.  Please open an issue to discuss your idea prior to s
 ## MIT License
 
 See https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/LICENSE.
+
+## About Atlas LiftTech
+
+This library is sponsored by (Atla LiftTech)[https://atlaslifttech.com/].  Atlas Lift Tech is a safe patient handling and mobility (SPHM) solution provider, helping hospitals improve patient outcomes and improve patient mobility.
