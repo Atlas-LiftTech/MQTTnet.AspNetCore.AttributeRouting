@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.AspNetCore.AttributeRouting", "Source\MQTTnet.AspNetCore.AttributeRouting.csproj", "{B1CFA8BF-FEBA-4978-86A6-D052C4C44BA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{EAF719B1-BDB9-433C-BAC6-D07BE56A9796}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTnet.AspNetCore.AttributeRouting.Tests", "Tests\MQTTnetA.AspNetCore.AttributeRouting.Tests\MQTTnet.AspNetCore.AttributeRouting.Tests.csproj", "{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTnet.AspNetCore.AttributeRouting.Tests", "Tests\MQTTnetA.AspNetCore.AttributeRouting.Tests\MQTTnet.AspNetCore.AttributeRouting.Tests.csproj", "{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleServer", "ExampleServer\ExampleServer.csproj", "{3B9BD1C8-FDEC-4BFF-A8DC-E1F6B6C539A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleClient", "ExampleClient\ExampleClient.csproj", "{C832D7F0-C0DA-403A-84DD-1682D44A3A3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +21,18 @@ Global
 		{B1CFA8BF-FEBA-4978-86A6-D052C4C44BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1CFA8BF-FEBA-4978-86A6-D052C4C44BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1CFA8BF-FEBA-4978-86A6-D052C4C44BA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EAF719B1-BDB9-433C-BAC6-D07BE56A9796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EAF719B1-BDB9-433C-BAC6-D07BE56A9796}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EAF719B1-BDB9-433C-BAC6-D07BE56A9796}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EAF719B1-BDB9-433C-BAC6-D07BE56A9796}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF9B933B-6EE0-4CEA-ACAF-DF425DF0B862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B9BD1C8-FDEC-4BFF-A8DC-E1F6B6C539A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B9BD1C8-FDEC-4BFF-A8DC-E1F6B6C539A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B9BD1C8-FDEC-4BFF-A8DC-E1F6B6C539A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B9BD1C8-FDEC-4BFF-A8DC-E1F6B6C539A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C832D7F0-C0DA-403A-84DD-1682D44A3A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C832D7F0-C0DA-403A-84DD-1682D44A3A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C832D7F0-C0DA-403A-84DD-1682D44A3A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C832D7F0-C0DA-403A-84DD-1682D44A3A3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
