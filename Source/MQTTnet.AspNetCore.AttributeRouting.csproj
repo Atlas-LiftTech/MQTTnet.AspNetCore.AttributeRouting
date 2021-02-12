@@ -13,24 +13,22 @@
 		<PackageTags>MQTT Message Queue Telemetry Transport MQTTClient MQTTServer Server MQTTBroker Broker NETStandard IoT InternetOfThings Messaging Hardware Arduino Sensor Actuator M2M ESP Smart Home Cities Automation Xamarin Blazor AspNetCore</PackageTags>
 		<Company>Atlas Lift Tech Inc.</Company>
 		<Authors>Anton Vishnyak</Authors>
-		<AssemblyVersion>0.3.0.13</AssemblyVersion>
-		<FileVersion>0.3.0.13</FileVersion>
+		<AssemblyVersion>0.3.14.0</AssemblyVersion>
+		<FileVersion>0.3.14.0</FileVersion>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
 		<AssemblyOriginatorKeyFile>..\codeSigningKey.pfx</AssemblyOriginatorKeyFile>
 		<LangVersion>default</LangVersion>
 		<RepositoryUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</RepositoryUrl>
 		<RepositoryType>GIT</RepositoryType>
-		<PackageReleaseNotes>Beta release 3
-
-* Added access to the MqttServe object from the BaseController
-* Added unit tests		</PackageReleaseNotes>
-		<Version>0.3.0</Version>
+		<PackageReleaseNotes>* Upgraded dependencies to v3.0.14	</PackageReleaseNotes>
+		<Version>0.3.14</Version>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</PackageProjectUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
@@ -42,9 +40,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="codeSigningKey.pfx" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.0" />
-		<PackageReference Include="MQTTnet" Version="3.0.13" />
-		<PackageReference Include="MQTTnet.AspNetCore" Version="3.0.13" />
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+		<PackageReference Include="MQTTnet" Version="3.0.14" />
+		<PackageReference Include="MQTTnet.AspNetCore" Version="3.0.14" />
 	</ItemGroup>
 </Project>
