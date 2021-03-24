@@ -121,4 +121,4 @@ See https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/LICENS
 
 ## About Atlas LiftTech
 
-This library is sponsored by [Atlas LiftTech](https://atlaslifttech.com/).  Atlas Lift Tech is a [safe patient handling and mobility (SPHM)](https://atlaslifttech.com/program-management/) solution provider, helping hospitals improve patient outcomes and improve patient mobility.
+This library is sponsored by [Atlas Lift Tech](https://atlaslifttech.com/).  Atlas Lift Tech is a [safe patient handling and mobility (SPHM)](https://atlaslifttech.com/program-management/) solution provider, helping hospitals improve patient outcomes and improve patient mobility.
