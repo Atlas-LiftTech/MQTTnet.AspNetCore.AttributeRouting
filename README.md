@@ -63,7 +63,15 @@ public void ConfigureServices(IServiceCollection services)
 			s.WithoutDefaultEndpoint();
 
 			// Enable Attribute routing
-			s.WithAttributeRouting();
+			s.WithAttributeRouting(
+				/* 
+					By default, messages published to topics that don't
+					match any routes are rejected. Change this to true
+					to allow those messages to be routed without hitting
+					any controller actions.
+				*/
+				allowUnmatchedRoutes: false
+			);
 		})
 		.AddMqttConnectionHandler()
 		.AddConnections();
