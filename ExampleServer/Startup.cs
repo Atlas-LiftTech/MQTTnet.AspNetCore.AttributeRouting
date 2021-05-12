@@ -34,7 +34,7 @@ namespace Example
                     s.WithoutDefaultEndpoint();
 
                     // Enable Attribute routing
-                    s.WithAttributeRouting();
+                    s.WithAttributeRouting(allowUnmatchedRoutes: true);
                 })
                 .AddMqttConnectionHandler()
                 .AddConnections();

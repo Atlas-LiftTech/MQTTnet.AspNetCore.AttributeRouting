@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace MQTTnet.AspNetCore.AttributeRouting.Tests
 {
@@ -57,8 +54,8 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Tests
                 "other/route"
             };
 
-            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match", BindingFlags.Public);
-            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor", BindingFlags.Public);
+            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match");
+            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor");
             var MockRoutes = new MqttRoute[] {
                 new MqttRoute(
                     new RouteTemplate(routes[0], new List<TemplateSegment>() {
@@ -84,6 +81,97 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Tests
             MockTable.Route(context);
 
             // Assert
+            Assert.IsNotNull(MockMethod);
+            Assert.IsNotNull(MockMethod2);
+            Assert.AreNotSame(MockMethod, MockMethod2);
+            Assert.AreSame(context.Handler, MockMethod);
+        }
+
+        [TestMethod]
+        public void Route_MatchWildcard()
+        {
+            // Arrange
+            var routes = new string[]
+            {
+                "{*path}",
+                "super/cool",
+                "other/route"
+            };
+
+            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match");
+            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor");
+            var MockRoutes = new MqttRoute[] {
+                new MqttRoute(
+                    new RouteTemplate(routes[0], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[0], "*path", true),
+                    }), MockMethod, new string[] { }),
+                new MqttRoute(
+                    new RouteTemplate(routes[1], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[1], "super", false),
+                        new TemplateSegment(routes[1], "cool", false),
+                    }), MockMethod2, new string[] { }),
+                new MqttRoute(
+                    new RouteTemplate(routes[2], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[2], "other", false),
+                        new TemplateSegment(routes[2], "route", false),
+                    }), MockMethod2, new string[] { }),
+            };
+
+            var context = new MqttRouteContext("super/duper");
+
+            // Act
+            var MockTable = new MqttRouteTable(MockRoutes);
+
+            MockTable.Route(context);
+
+            // Assert
+            Assert.IsNotNull(MockMethod);
+            Assert.IsNotNull(MockMethod2);
+            Assert.AreNotSame(MockMethod, MockMethod2);
+            Assert.AreSame(context.Handler, MockMethod);
+        }
+
+        [TestMethod]
+        public void Route_MatchWildcardOrder()
+        {
+            // Arrange
+            var routes = new string[]
+            {
+                "{*path}",
+                "super/cool",
+                "other/route"
+            };
+
+            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match");
+            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor");
+            var MockRoutes = new MqttRoute[] {
+                new MqttRoute(
+                    new RouteTemplate(routes[1], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[1], "super", false),
+                        new TemplateSegment(routes[1], "cool", false),
+                    }), MockMethod, new string[] { }),
+                new MqttRoute(
+                    new RouteTemplate(routes[2], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[2], "other", false),
+                        new TemplateSegment(routes[2], "route", false),
+                    }), MockMethod2, new string[] { }),
+                new MqttRoute(
+                    new RouteTemplate(routes[0], new List<TemplateSegment>() {
+                        new TemplateSegment(routes[0], "*path", true),
+                    }), MockMethod2, new string[] { }),
+            };
+
+            var context = new MqttRouteContext("super/cool");
+
+            // Act
+            var MockTable = new MqttRouteTable(MockRoutes);
+
+            MockTable.Route(context);
+
+            // Assert
+            Assert.IsNotNull(MockMethod);
+            Assert.IsNotNull(MockMethod2);
+            Assert.AreNotSame(MockMethod, MockMethod2);
             Assert.AreSame(context.Handler, MockMethod);
         }
 
@@ -98,8 +186,8 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Tests
                 "other/route"
             };
 
-            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match", BindingFlags.Public);
-            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor", BindingFlags.Public);
+            var MockMethod = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Match");
+            var MockMethod2 = Type.GetType("MQTTnet.AspNetCore.AttributeRouting.Tests.RouteTableTests").GetMethod("Route_Constructor");
             var MockRoutes = new MqttRoute[] {
                 new MqttRoute(
                     new RouteTemplate(routes[0], new List<TemplateSegment>() {
@@ -125,6 +213,9 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Tests
             MockTable.Route(context);
 
             // Assert
+            Assert.IsNotNull(MockMethod);
+            Assert.IsNotNull(MockMethod2);
+            Assert.AreNotSame(MockMethod, MockMethod2);
             Assert.IsNull(context.Handler);
         }
     }

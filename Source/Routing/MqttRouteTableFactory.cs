@@ -168,6 +168,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         /// * For literals with different values (case insensitive) we choose the lexical order
         /// * For parameters with different numbers of constraints, the one with more wins If we get to the end of the
         /// comparison routing we've detected an ambiguous pair of routes.
+        /// * Catch-all routes go last
         /// </summary>
         internal static int RouteComparison(MqttRoute x, MqttRoute y)
         {
@@ -179,16 +180,36 @@ namespace MQTTnet.AspNetCore.AttributeRouting
             var xTemplate = x.Template;
             var yTemplate = y.Template;
 
-            if (xTemplate.Segments.Count() != y.Template.Segments.Count())
+            if (xTemplate.Segments.Count != y.Template.Segments.Count)
             {
-                return xTemplate.Segments.Count() < y.Template.Segments.Count() ? -1 : 1;
+                if (!xTemplate.Segments[xTemplate.Segments.Count - 1].IsCatchAll && yTemplate.Segments[yTemplate.Segments.Count - 1].IsCatchAll)
+                {
+                    return -1;
+                }
+
+                if (xTemplate.Segments[xTemplate.Segments.Count - 1].IsCatchAll && !yTemplate.Segments[yTemplate.Segments.Count - 1].IsCatchAll)
+                {
+                    return 1;
+                }
+
+                return xTemplate.Segments.Count < y.Template.Segments.Count ? -1 : 1;
             }
             else
             {
-                for (var i = 0; i < xTemplate.Segments.Count(); i++)
+                for (var i = 0; i < xTemplate.Segments.Count; i++)
                 {
                     var xSegment = xTemplate.Segments[i];
                     var ySegment = yTemplate.Segments[i];
+
+                    if (!xSegment.IsCatchAll && ySegment.IsCatchAll)
+                    {
+                        return -1;
+                    }
+
+                    if (xSegment.IsCatchAll && !ySegment.IsCatchAll)
+                    {
+                        return 1;
+                    }
 
                     if (!xSegment.IsParameter && ySegment.IsParameter)
                     {

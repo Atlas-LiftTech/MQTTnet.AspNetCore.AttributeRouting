@@ -34,10 +34,10 @@ namespace MQTTnet.AspNetCore.AttributeRouting
             return services;
         }
 
-        public static AspNetMqttServerOptionsBuilder WithAttributeRouting(this AspNetMqttServerOptionsBuilder options)
+        public static AspNetMqttServerOptionsBuilder WithAttributeRouting(this AspNetMqttServerOptionsBuilder options, bool allowUnmatchedRoutes = false)
         {
             var router = options.ServiceProvider.GetRequiredService<MqttRouter>();
-            var interceptor = new MqttServerApplicationMessageInterceptorDelegate(context => router.OnIncomingApplicationMessage(options, context));
+            var interceptor = new MqttServerApplicationMessageInterceptorDelegate(context => router.OnIncomingApplicationMessage(options, context, allowUnmatchedRoutes));
 
             options.WithApplicationMessageInterceptor(interceptor);
 

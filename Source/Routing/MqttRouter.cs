@@ -27,7 +27,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
             this.typeActivator = typeActivator;
         }
 
-        internal async Task OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context)
+        internal async Task OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context, bool allowUnmatchedRoutes)
         {
             // Don't process messages sent from the server itself. This avoids footguns like a server failing to publish
             // a message because a route isn't found on a controller.
@@ -43,9 +43,12 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
             if (routeContext.Handler == null)
             {
                 // Route not found
-                logger.LogDebug($"Rejecting message publish because '{context.ApplicationMessage.Topic}' did not match any known routes.");
+                if (!allowUnmatchedRoutes)
+                {
+                    logger.LogDebug($"Rejecting message publish because '{context.ApplicationMessage.Topic}' did not match any known routes.");
+                }
 
-                context.AcceptPublish = false;
+                context.AcceptPublish = allowUnmatchedRoutes;
             }
             else
             {
