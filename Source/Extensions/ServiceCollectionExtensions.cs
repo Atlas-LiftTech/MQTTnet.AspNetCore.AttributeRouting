@@ -3,27 +3,31 @@
 using Microsoft.Extensions.DependencyInjection;
 using MQTTnet.AspNetCore.AttributeRouting.Routing;
 using MQTTnet.Server;
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 // This is needed to make internal classes visible to UnitTesting projects
-[assembly: InternalsVisibleTo("MQTTnet.AspNetCore.AttributeRouting.Tests, PublicKey=0024000004800000" +
-    "94000000060200000024000052534131000400000100010091a5662c5f42234a9cd1cf5d80d8bfed8652694da25bc9c" +
-    "3cbc0c160b41cb124fc6ad7896b40b82964d86ef0c1d2a21bf478988141e420a62ee172146a2e4396fa2638154e2cd4" +
-    "a926ec3f6cef2ca1fbf52775aa63156a1c21efc904b07b5699088e8e1b82d8186911c34a580b3f6fe4b77506e297875" +
-    "1110985c444a6968fcf")]
+[assembly: InternalsVisibleTo("MQTTnet.AspNetCore.AttributeRouting.Tests, PublicKey=00240000048000009" +
+    "4000000060200000024000052534131000400000100010089369e254b2bf47119265eb7514c522350b2e61beda20ccc9" +
+    "a9ddc3f8dab153d59d23011476cc939860d9ae7d09d1bade2915961d01f9ec1f1852265e4d54b090f4c427756f7044e8" +
+    "65ffcd47bf99f18af6361de42003808f7323d20d5d2c66fe494852b5e2438db793ec9fd845b80e1ce5c9b17ff053f386" +
+    "bc0f06080e9d0ba")]
 
 namespace MQTTnet.AspNetCore.AttributeRouting
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMqttControllers(this IServiceCollection services)
+        public static IServiceCollection AddMqttControllers(this IServiceCollection services, Assembly[] fromAssemblies = null)
         {
-            services.AddSingleton(c =>
+            services.AddSingleton(_ =>
             {
-                // future enhancement: scan for other AppParts, if needed
+                if (fromAssemblies != null && fromAssemblies.Length == 0)
+                {
+                    throw new ArgumentException("'fromAssemblies' cannot be an empty array. Pass null or a collection of 1 or more assemblies.", nameof(fromAssemblies));
+                }
 
-                var assemblies = new Assembly[] { Assembly.GetEntryAssembly() };
+                var assemblies = fromAssemblies ?? new Assembly[] { Assembly.GetEntryAssembly() };
 
                 return MqttRouteTableFactory.Create(assemblies);
             });

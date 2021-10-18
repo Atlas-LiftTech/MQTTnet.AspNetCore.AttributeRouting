@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.14" />
+    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.16" />
   </ItemGroup>
 
 </Project>
