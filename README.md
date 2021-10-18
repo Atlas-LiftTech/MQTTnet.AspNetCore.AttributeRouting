@@ -53,8 +53,14 @@ public void ConfigureServices(IServiceCollection services)
 {
 	// ... All your other configuration ...
 
-	// Identify and build routes for the current assembly
-	services.AddMqttControllers();
+	// Identify and build routes
+	services.AddMqttControllers(
+		/*
+			By default, all controllers within the executing assembly are
+			discovered (just pass nothing here). To provide a list of assemblies
+			explicitly, pass an array of Assembly[] here.
+		*/
+	);
 
 	services
 		.AddHostedMqttServerWithServices(s =>
