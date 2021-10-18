@@ -21,7 +21,7 @@
 		<LangVersion>default</LangVersion>
 		<RepositoryUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</RepositoryUrl>
 		<RepositoryType>GIT</RepositoryType>
-		<PackageReleaseNotes>* Added support for "allowUnmatchedRoutes"</PackageReleaseNotes>
+		<PackageReleaseNotes>* Added support for passing an array of assemblies to use in route discovery</PackageReleaseNotes>
 		<Version>0.3.16</Version>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting</PackageProjectUrl>
