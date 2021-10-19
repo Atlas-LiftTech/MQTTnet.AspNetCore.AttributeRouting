@@ -123,7 +123,9 @@ public class MqttWeatherForecastController : MqttBaseController // Inherit from 
 }
 ```
 
-[See a full example project here](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/tree/master/Example)
+[See server example project here](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/tree/master/ExampleServer)
+
+[See client example project here](https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/tree/master/ExampleClient)
 
 ## Contributions
 
