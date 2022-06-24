@@ -14,7 +14,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         /// <summary>
         /// Connection context is set by controller activator. If this class is instantiated directly, it will be null.
         /// </summary>
-        public MqttApplicationMessageInterceptorContext MqttContext => ControllerContext.MqttContext;
+        public InterceptingPublishEventArgs MqttContext => ControllerContext.MqttContext;
 
         /// <summary>
         /// Gets the <see cref="MqttApplicationMessage"/> for the executing action.
@@ -24,7 +24,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         /// <summary>
         /// Gets the <see cref="MqttServer"/> for the executing action.
         /// </summary>
-        public IMqttServer Server => ControllerContext.MqttServer;
+        public MqttServer Server => ControllerContext.MqttServer;
 
         /// <summary>
         /// ControllerContext is set by controller activator. If this class is instantiated directly, it will be null.
@@ -39,7 +39,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         [NonAction]
         public virtual Task Ok()
         {
-            MqttContext.AcceptPublish = true;
+            MqttContext.ProcessPublish = true;
             return Task.CompletedTask;
         }
 
@@ -58,7 +58,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting
         [NonAction]
         public virtual Task BadMessage()
         {
-            MqttContext.AcceptPublish = false;
+            MqttContext.ProcessPublish = false;
             return Task.CompletedTask;
         }
     }

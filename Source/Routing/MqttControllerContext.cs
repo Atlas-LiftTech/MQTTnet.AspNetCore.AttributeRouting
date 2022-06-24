@@ -6,7 +6,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 {
     public class MqttControllerContext : IMqttControllerContext
     {
-        public MqttApplicationMessageInterceptorContext MqttContext { get; set; }
-        public IMqttServer MqttServer { get; set; }
+        public InterceptingPublishEventArgs MqttContext { get; set; }
+        public MqttServer MqttServer { get; set; }
     }
 }

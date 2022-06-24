@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MQTTnet.AspNetCore;
 using MQTTnet.AspNetCore.AttributeRouting;
-using MQTTnet.AspNetCore.Extensions;
+using MQTTnet.Server;
 
 namespace Example
 {
@@ -24,17 +25,15 @@ namespace Example
             // Configure AspNetCore controllers
             services.AddControllers();
 
+            services.AddSingleton<MqttServer>();
+
             // Identify and build routes for the current assembly
             services.AddMqttControllers();
-
             services
                 .AddHostedMqttServerWithServices(s =>
                 {
                     // Optionally set server options here
                     s.WithoutDefaultEndpoint();
-
-                    // Enable Attribute routing
-                    s.WithAttributeRouting(allowUnmatchedRoutes: true);
                 })
                 .AddMqttConnectionHandler()
                 .AddConnections();
@@ -57,7 +56,15 @@ namespace Example
                 endpoints.MapControllers();
 
                 // Root endpoint for MQTT - attribute routing picks up after this URL
-                endpoints.MapMqtt("/mqtt");
+                endpoints.MapConnectionHandler<MqttConnectionHandler>(
+                    "/mqtt",
+                    opts => opts.WebSockets.SubProtocolSelector = protocolList => protocolList.FirstOrDefault() ?? string.Empty);
+            });
+
+            app.UseMqttServer(server =>
+            {
+                // Enable Attribute routing
+                server.WithAttributeRouting(app.ApplicationServices, true);
             });
         }
     }

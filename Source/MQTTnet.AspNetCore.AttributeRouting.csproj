@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>
 			This is a support library to integrate AttributeRouting into MQTTnet with AspNetCore.
@@ -42,7 +42,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-		<PackageReference Include="MQTTnet" Version="3.0.16" />
-		<PackageReference Include="MQTTnet.AspNetCore" Version="3.0.16" />
+		<PackageReference Include="MQTTnet" Version="4.0.1.184" />
+		<PackageReference Include="MQTTnet.AspNetCore" Version="4.0.1.184" />
 	</ItemGroup>
 </Project>

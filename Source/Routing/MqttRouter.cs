@@ -27,7 +27,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
             this.typeActivator = typeActivator;
         }
 
-        internal async Task OnIncomingApplicationMessage(AspNetMqttServerOptionsBuilder options, MqttApplicationMessageInterceptorContext context, bool allowUnmatchedRoutes)
+        internal async Task OnIncomingApplicationMessage(IServiceProvider svcProvider, InterceptingPublishEventArgs context, bool allowUnmatchedRoutes)
         {
             // Don't process messages sent from the server itself. This avoids footguns like a server failing to publish
             // a message because a route isn't found on a controller.
@@ -48,11 +48,11 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
                     logger.LogDebug($"Rejecting message publish because '{context.ApplicationMessage.Topic}' did not match any known routes.");
                 }
 
-                context.AcceptPublish = allowUnmatchedRoutes;
+                context.ProcessPublish = allowUnmatchedRoutes;
             }
             else
             {
-                using (var scope = options.ServiceProvider.CreateScope())
+                using (var scope = svcProvider.CreateScope())
                 {
                     Type? declaringType = routeContext.Handler.DeclaringType;
 
@@ -83,7 +83,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
                     var controllerContext = new MqttControllerContext()
                     {
                         MqttContext = context,
-                        MqttServer = scope.ServiceProvider.GetRequiredService<IMqttServer>()
+                        MqttServer = scope.ServiceProvider.GetRequiredService<MqttServer>()
                     };
 
                     for (int i = 0; i < activateProperties.Length; i++)
@@ -94,7 +94,7 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
 
                     ParameterInfo[] parameters = routeContext.Handler.GetParameters();
 
-                    context.AcceptPublish = true;
+                    context.ProcessPublish = true;
 
                     if (parameters.Length == 0)
                     {
@@ -114,20 +114,20 @@ namespace MQTTnet.AspNetCore.AttributeRouting.Routing
                         {
                             logger.LogError(ex, $"Unable to match route parameters to all arguments. See inner exception for details.");
 
-                            context.AcceptPublish = false;
+                            context.ProcessPublish = false;
                         }
                         catch (TargetInvocationException ex)
                         {
                             logger.LogError(ex.InnerException, $"Unhandled MQTT action exception. See inner exception for details.");
 
                             // This is an unandled exception from the invoked action
-                            context.AcceptPublish = false;
+                            context.ProcessPublish = false;
                         }
                         catch (Exception ex)
                         {
                             logger.LogError(ex, "Unable to invoke Mqtt Action.  See inner exception for details.");
 
-                            context.AcceptPublish = false;
+                            context.ProcessPublish = false;
                         }
                     }
                 }

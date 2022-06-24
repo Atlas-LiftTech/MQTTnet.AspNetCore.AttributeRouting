@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MQTTnet.AspNetCore;
 
 namespace Example
 {
@@ -18,9 +19,16 @@ namespace Example
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseKestrel(
+                    o =>
+                    {
+                        o.ListenAnyIP(50483, l => l.UseMqtt()); // MQTT pipeline
+                        o.ListenAnyIP(50482); // Default HTTP pipeline
+                    });
+                webBuilder.ConfigureLogging(opts => opts.AddConsole());
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }
